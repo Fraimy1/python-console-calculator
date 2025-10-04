@@ -41,7 +41,7 @@ class Parser:
 
 Token = tuple[str, float | None]
 
-class CalcError():
+class CalcError(Exception):
     pass
 
 class Calculator:
@@ -104,6 +104,4 @@ if __name__ == '__main__':
     ('3 2 1 + *', 9),
     ('6 2 3 ** /', 0.75),
 ]
-    # for test, answer in tests:
-    #     print(f'{test} = {calc.calculate_rpn(test)} | Correct answer = {answer}')
-    print(calc.calculate_rpn('2 2 3 3 ** **'), 4**3)
+    print(calc.calculate_rpn('2 2 3 ** **'), 2**(2**3), (2**2)**3)
