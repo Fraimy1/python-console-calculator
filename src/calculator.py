@@ -1,7 +1,7 @@
 import re
 import operator
 
-NUM = r"[+-]?\d+(?:\.\d+)?"
+NUM = r"[+-]?[\d_]+(?:\.[\d_]+)?"
 
 pattern = rf"""
     \s*
@@ -104,4 +104,5 @@ if __name__ == '__main__':
     ('3 2 1 + *', 9),
     ('6 2 3 ** /', 0.75),
 ]
-    print(calc.calculate_rpn('2 2 3 ** **'), 2**(2**3), (2**2)**3)
+    print(calc.calculate_rpn('1_000_000.132_123 2 +'), 2**(2**3), (2**2)**3)
+    # print(1.2_2_3)
