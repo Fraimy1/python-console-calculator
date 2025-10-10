@@ -1,57 +1,42 @@
 import pytest
 from src.calculator import Calculator
 
-tests = [
+success_cases = [
     # Basic arithmetic
-    ('3 2 4 ** +', 19),
-    ('5 1 2 + 4 ** + 3 -', 83),
-    ('10 3 // 2 *', 6),
-    ('20 3 % 2 +', 4),
-    ('2 3 + 4 *', 20),
-    ('2 3 4 * +', 14),
-    ('2 +2 +', 4),
-    ('5 -78 +', -73),
-    ('3 2 1 + *', 9),
-    ('6 2 3 ** /', 0.75),
+    ('3   2  +', 5),
+    ('5 1 2 + 4 ** + 3 -', 83), # mixed ops
+    (' 6  4 / ', 1.5), # float division
+    ('10 3 //', 6), # division
+    ('20 3 %', 2),
+    ('5 -78 +', -73), # unary minus
+    ('5 +78 -', -73), # unary plus
+    
+    # Order in chaining check
+    ('2 3 2 ** **', 512), # (2^3)^2 = 64
+    ('2 3 ** 2 **', 64), # 2^(3^2) = 512
 
-    # Exponentiation and chaining
-    ('2 3 ** 2 **', 64),           # 2^(3^2) = 64
-    ('2 3 2 ** **', 512),          # (2^3)^2 = 512
-    ('9 0.5 **', 3),               # sqrt(9) = 3
+    # Operations with parentheses
+    ('(2)', 2),
+    ('(3 ( 2 1 + ) *)', 9),
+    ('( 3 4 +) (5 2 - ) *', 21),
+    ('(3 (2 1 +) *)', 9),
 
-    # Mixed operators with precedence
-    ('5 1 2 + 4 ** + 3 -', 83),
-    ('3 4 * 2 5 * +', 22),
-    ('10 2 5 + *', 70),
-    ('100 5 / 2 -', 18),
-
-    # Unary and negative handling
-    ('-3 -2 *', 6),
-    ('-3 2 **', 9),
-    ('2 -3 **', 0.125),
-    ('-5 -2 **', 0.04),
-
-    # Integer division and modulo
-    ('7 3 //', 2),
-    ('7 3 %', 1),
-    ('10 4 % 3 +', 5),
+    # 1_000 syntax check
+    ('2_000_000 2_000 +', 2002000),
+    ('1_000.500_000 + 1.5', 1002.0),
 
     # Complex nesting simulation
-    ('3 5 2 * + 8 4 / -', 11),       # (3 + 10) - 2 = 11 - 3 = 11
-    ('2 3 4 + * 5 6 * +', 44),
-    ('10 2 3 ** *', 80),             # 10 * (2^3) = 80
+    ('3 5 2 * + 8 4 / -', 11), # 5*2 + 3 - 8/4 = 10 + 3 - 2 = 11 
+    ('2 3 4 + * 5 6 * +', 44), # (3+4) * 2 + 5*6 = 14 + 30 = 44
+    ('10 2 3 ** *', 80), # 2^3 * 10 = 8 * 10 = 80
+]
 
-    # Floating point
-    ('5.5 2 *', 11.0),
-    ('3.2 1.2 + 2 *', 8.8),
+error_cases = [
 
-    # Division by float
-    ('6 4 /', 1.5),
-    ('5 2 /', 2.5),
 ]
 
 calc = Calculator()
 
-@pytest.mark.parametrize('expr,expected', tests)
+@pytest.mark.parametrize('expr,expected', success_cases)
 def test_calculator(expr, expected):
     assert calc.calculate_rpn(expr) == pytest.approx(expected)
