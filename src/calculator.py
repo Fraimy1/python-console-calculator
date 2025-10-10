@@ -1,5 +1,5 @@
-from parser import Parser
-from errors import CalcError
+from src.parser import Parser
+from src.errors import CalcError
 
 class Calculator:
     """Calculates RPN expressions using expression parsed by Parser.parse()"""
@@ -24,7 +24,10 @@ class Calculator:
                 if value == "+": stack.append(a + b)
                 elif value == "-": stack.append(a - b)
                 elif value == "*": stack.append(a * b)
-                elif value == "%": stack.append(a % b)
+                elif value == "%": 
+                    if b == 0:
+                        raise CalcError("Division by zero")
+                    stack.append(a % b)
                 elif value == "**": 
                     power_res = a**b
                     if isinstance(power_res, complex):

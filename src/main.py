@@ -1,4 +1,4 @@
-from calculator import Calculator
+from src.calculator import Calculator
 
 user_welcome_message = """
 =============================================
@@ -33,7 +33,7 @@ if __name__ == '__main__':
         if expr == "exit":
             print(user_goodbye_message)
             break
-        
+
         try: 
             result = calc.calculate_rpn(expr)
             print(f'Result: {result}\n')

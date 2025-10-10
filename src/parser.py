@@ -1,5 +1,5 @@
 import re
-from errors import CalcError
+from src.errors import CalcError
 
 NUM = r"[+-]?[\d_]+(?:\.[\d_]+)?"
 
@@ -35,7 +35,12 @@ class Parser:
         parsed = []
         for term in expr:
             if re.fullmatch(NUM, term):
+                try:
+                    term = float(term)
+                except:
+                    raise CalcError(f"Couldn't convert {term} to float")
                 parsed.append(("NUM", float(term)))
+                    
             elif term in {"+", "-", "*", "/", "**", "//", "%"}:
                 parsed.append(("OP", term))
             elif term in "()":
