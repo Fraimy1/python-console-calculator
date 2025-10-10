@@ -4,7 +4,7 @@
 
 # Custom
 test.ipynb
-
+*.ipynb
 # User-specific stuff
 .idea/
 .idea/**/workspace.xml
