@@ -8,59 +8,55 @@ class Calculator:
 
     def calculate_rpn(self, expr: str) -> float:
         """Calculates RPN and returns result"""
-        
-        if not expr or not expr.strip():
-            raise CalcError("Пустой ввод")
-        
+                
         expr = self.parser.parse(expr)
 
-        st: list[float] = []
+        stack: list[float] = []
         
         paren_marks = [] # marks the point where parentheses open
 
         for tok_type, value in expr:
             if tok_type == 'OP':
-                if len(st) < 2:
+                if len(stack) < 2:
                     raise CalcError("Not enough operands")
-                b = st.pop()      
-                a = st.pop()       
-                if value == "+": st.append(a + b)
-                elif value == "-": st.append(a - b)
-                elif value == "*": st.append(a * b)
-                elif value == "%": st.append(a % b)
-                elif value == "**": st.append(a**b)
+                b = stack.pop()      
+                a = stack.pop()       
+                if value == "+": stack.append(a + b)
+                elif value == "-": stack.append(a - b)
+                elif value == "*": stack.append(a * b)
+                elif value == "%": stack.append(a % b)
+                elif value == "**": 
+                    power_res = a**b
+                    if isinstance(power_res, complex):
+                        raise CalcError(f'No solution in real numbers for {a} ** {b}')
+                    stack.append(power_res)
                 elif value == "//":
                     if b == 0:
                         raise CalcError("Division by zero")
-                    st.append(a // b)
+                    stack.append(a // b)
                 elif value == "/":
                     if b == 0:
                         raise CalcError("Division by zero")
-                    st.append(a / b)
+                    stack.append(a / b)
             elif tok_type == 'PAR':
                 if value == '(':
-                    paren_marks.append(len(st))
+                    paren_marks.append(len(stack))
                 else:
                     if not paren_marks:
                         raise CalcError('The parentheses were never opened')
-                    paren_size = len(st) - paren_marks.pop()
+                    paren_size = len(stack) - paren_marks.pop()
                     if paren_size != 1:
                         raise CalcError(f'Incorrect parentheses expression. Expected format is (2) or (2 1 +)')
             elif tok_type == 'NUM':
                 try:
-                    st.append(float(value))
+                    stack.append(float(value))
                 except ValueError:
                     raise CalcError(f"Not a number or operator: {value}")
             
-        if len(st) != 1:
+        if len(stack) != 1:
             raise CalcError("Excess data in expression")
     
         if paren_marks:
-            raise CalcError(f"Mismatched parentheses: {len(paren_marks)} '(' were never closed")
-
-        result = st[0]        
+            raise CalcError(f"Mismatched parentheses: {len(paren_marks)} '(' were never closed")    
         
-        if isinstance(result, complex):
-            raise CalcError('No solution in real numbers')
-        
-        return result
+        return stack[0] 

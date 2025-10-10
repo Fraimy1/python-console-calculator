@@ -27,7 +27,10 @@ class Parser:
 
     def parse(self, expr: str):
         """Parses str RPN expression into tokens using re pattern"""
-
+        
+        if not expr or not expr.strip():
+            raise CalcError("Empty expression")
+        
         expr = TOKEN_RE2.findall(expr)
         parsed = []
         for term in expr:
