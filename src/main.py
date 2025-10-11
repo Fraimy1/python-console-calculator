@@ -7,7 +7,7 @@ def main():
     while True:
         try:
             expr = input("Insert your expression: ")
-        except EOFError:
+        except KeyboardInterrupt:
             print('\n', USER_GOODBYE_MESSAGE)
             break
         if expr == "exit":
