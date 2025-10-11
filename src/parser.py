@@ -1,21 +1,6 @@
 import re
 from src.errors import CalcError
-
-NUM = r"[+-]?[\d_]+(?:\.[\d_]+)?"
-
-pattern = rf"""
-    \s*
-    (
-        \*\*            |   # Double *
-        //              |   # Double /
-        %               |   # solo %
-        \*(?!\*)        |   # solo *
-        /(?!/)          |   # solo /
-        {NUM}           |   # Number
-        [*/()%]         |   # tokens except + -
-        [+\-]               # + or - as separate operators
-    )
-"""
+from src.constants import pattern, NUM
 
 TOKEN_RE2 = re.compile(pattern, re.VERBOSE)
 Token = tuple[str, float | str]
