@@ -5,8 +5,10 @@ from src.constants import pattern, NUM
 TOKEN_RE2 = re.compile(pattern, re.VERBOSE)
 Token = tuple[str, float | str]
 
+
 class Parser:
     """Covnerts str RPN expression into tokens"""
+
     def __init__(self):
         self.smth = None
 
