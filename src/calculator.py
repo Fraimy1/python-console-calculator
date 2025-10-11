@@ -1,103 +1,68 @@
-class Parser:
-    def __init__(self, string=None):
-        self.string = string
-        self.data = self.parse_string(string) if string is not None else None
-        
-    def parse_string(self, string:str):
-        if string is None:
-            self.string = string
-        self.string = self.string.replace('(', ' ( ').replace(')', ' ) ')
-        data = [int(c) if c in '0123456789' else c for c in self.string.split()]
-        data = [el for el in data if el != ' ']
-        
-        return data
+from src.parser import Parser
+from src.errors import CalcError
 
-    def _add_to_stack(char, stack):
-        pass
-    
-    def _get_precedence(self, char):
-        match char:
-            case '*':
-                return 2
-            case '/':
-                return 2
-            case '-':
-                return 1
-            case '+':
-                return 1
-            case '**':
-                return 3
-            case '(':
-                return -1
-            
+class Calculator:
+    """Calculates RPN expressions using expression parsed by Parser.parse()"""
+    def __init__(self) -> None:
+        self.parser = Parser()
 
-    def infix_to_rpn(self, data = None):
-        output = []
-        stack = []
-        # parentheses_indexes = []
-        
-        if data is not None:
-            self.data = data
+    def calculate_rpn(self, expr: str) -> float:
+        """Calculates RPN and returns result"""
 
-        for c in self.data:
-            if isinstance(c, int) or isinstance(c, float):
-                output.append(c)
-                print(f'char: {c} | stack: {stack} | output: {output}')
-                continue
-            
-            if c == '(':
-                stack.append(c)
-                print(f'char: {c} | stack: {stack} | output: {output}')
-                continue
-            
-            if c == ')':
-                left_index = stack.index('(')
-                output.extend(stack[left_index+1:])
-                del stack[left_index+1:]
-                stack.pop(left_index)
-                continue
+        parsed_expr: list[tuple[str, float | str]] = self.parser.parse(expr)
 
-            if not stack:
-                stack.append(c)
-                print(f'char: {c} | stack: {stack} | output: {output}')
-                continue
-            
-            last_precedence = self._get_precedence(stack[-1])
-            precedence = self._get_precedence(c)
+        stack: list[float] = []
 
-            print(stack[-1], last_precedence if last_precedence is not None else '')
-            print(c, precedence if precedence is not None else '')
-            
-            if  precedence == last_precedence:
-                output.append(stack.pop())
-                stack.append(c)
-            elif last_precedence>precedence:
-                output.append(stack.pop())
-                stack.append(c)
-            else:
-                stack.append(c)
-                # precedence based appending to output or stack 
+        paren_marks = [] # marks the point where parentheses open
 
-            print(f'char: {c} | stack: {stack} | output: {output}')
-        
-        while stack:
-            output.append(stack.pop())
+        for tok_type, value in parsed_expr:
+            if tok_type == 'OP':
+                if len(stack) < 2:
+                    raise CalcError("Not enough operands")
+                b = stack.pop()
+                a = stack.pop()
+                if value == "+":
+                    stack.append(a + b)
+                elif value == "-":
+                    stack.append(a - b)
+                elif value == "*":
+                    stack.append(a * b)
+                elif value == "%":
+                    if b == 0:
+                        raise CalcError("Division by zero")
+                    stack.append(a % b)
+                elif value == "**":
+                    power_res = a**b
+                    if isinstance(power_res, complex):
+                        raise CalcError(f'No solution in real numbers for {a} ** {b}')
+                    stack.append(power_res)
+                elif value == "//":
+                    if b == 0:
+                        raise CalcError("Division by zero")
+                    stack.append(a // b)
+                elif value == "/":
+                    if b == 0:
+                        raise CalcError("Division by zero")
+                    stack.append(a / b)
+            elif tok_type == 'PAR':
+                if value == '(':
+                    paren_marks.append(len(stack))
+                else:
+                    if not paren_marks:
+                        raise CalcError('The parentheses were never opened')
+                    paren_size = len(stack) - paren_marks.pop()
+                    if paren_size != 1:
+                        raise CalcError('Incorrect parentheses expression. Expected format is (2) or (2 1 +)')
+            elif tok_type == 'NUM':
+                try:
+                    stack.append(float(value))
+                except ValueError:
+                    raise CalcError(f"Not a number or operator: {value}")
 
-        print(f'stack: {stack} | output: {output}')
-        return output
+        if len(stack) != 1:
+            raise CalcError("Excess data in expression")
 
-            
+        if paren_marks:
+            raise CalcError(f"Mismatched parentheses: {len(paren_marks)} '(' were never closed")
 
-
-if __name__ == '__main__':
-    tests = [
-        '3 + 2',
-        '3 + 4 * 2'
-        '(3 + 4) * 2'
-    ]
-
-    for test in tests:
-        parser = Parser(test)
-        print(test, 'eval result =', eval(test))
-        print(parser.parse_string(test))
-        print(parser.infix_to_rpn(test))
+        return stack[0]
