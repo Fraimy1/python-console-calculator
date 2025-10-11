@@ -18,29 +18,29 @@ pattern = rf"""
 """
 
 TOKEN_RE2 = re.compile(pattern, re.VERBOSE)
-Token = tuple[str, float | None]
+Token = tuple[str, float | str]
 
 class Parser:
     """Covnerts str RPN expression into tokens"""
     def __init__(self):
         self.smth = None
 
-    def parse(self, expr: str):
+    def parse(self, expr: str) -> list[tuple[str, float | str]]:
         """Parses str RPN expression into tokens using re pattern"""
-        
+
         if not expr or not expr.strip():
             raise CalcError("Empty expression")
-        
-        expr = TOKEN_RE2.findall(expr)
-        parsed = []
-        for term in expr:
+
+        tokens = TOKEN_RE2.findall(expr)
+        parsed: list[tuple[str, float | str]] = []
+        for term in tokens:
             if re.fullmatch(NUM, term):
                 try:
                     term = float(term)
-                except:
+                except ValueError:
                     raise CalcError(f"Couldn't convert {term} to float")
                 parsed.append(("NUM", float(term)))
-                    
+
             elif term in {"+", "-", "*", "/", "**", "//", "%"}:
                 parsed.append(("OP", term))
             elif term in "()":
