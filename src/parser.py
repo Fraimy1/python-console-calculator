@@ -9,9 +9,6 @@ Token = tuple[str, float | str]
 class Parser:
     """Covnerts str RPN expression into tokens"""
 
-    def __init__(self):
-        self.smth = None
-
     def parse(self, expr: str) -> list[tuple[str, float | str]]:
         """Parses str RPN expression into tokens using re pattern"""
 
