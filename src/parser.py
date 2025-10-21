@@ -12,9 +12,6 @@ class Parser:
     def parse(self, expr: str) -> list[tuple[str, float | str]]:
         """Parses str RPN expression into tokens using re pattern"""
 
-        if not expr or not expr.strip():
-            raise CalcError("Empty expression")
-
         tokens = TOKEN_RE2.findall(expr)
         parsed: list[tuple[str, float | str]] = []
         for term in tokens:
