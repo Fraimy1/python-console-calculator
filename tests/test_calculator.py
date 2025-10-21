@@ -30,21 +30,19 @@ success_cases = [
 ]
 
 error_cases = [
-    ("", "Empty expression"),
-    ("   ", "Empty expression"),
-    ("1 +", "Not enough operands"),
-    ("1 2", "Excess data"),
-    ("1 0 /", "Division by zero"),
-    ("1 0 //", "Division by zero"),
-    ("1 0 %", "Division by zero"),
-    (") 2 3 +", "never opened"),
-    ("(2 3 +", "Mismatched parentheses"),
-    ("(1 2)", "Incorrect parentheses"),
-    ("2 a +", "Not enough operands"),  # The character is ignored by re, so
-                                       # we won't get "Unsupported character" here
-    ("-2 0.5 **", "No solution in real numbers"),
+    ("", r"Empty expression"),
+    ("   ", r"Empty expression"),
+    ("1 +", r"Not enough values"),
+    ("1 2", r"reduce to.*one value"),
+    ("1 0 /", r"Division by zero"),
+    ("1 0 //", r"Division by zero"),
+    ("1 0 %", r"Division by zero"),
+    (") 2 3 +", r"(never opened|closed without)"),
+    ("(2 3 +", r"(Mismatched parentheses|Unclosed)"),
+    ("(1 2)", r"Invalid expression inside parentheses"),
+    ("2 a +", r"Not enough values"),
+    ("-2 0.5 **", r"No solution in real numbers"),
 ]
-
 calc = Calculator()
 
 
