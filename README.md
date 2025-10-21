@@ -42,11 +42,12 @@ python -m src.main
 ```
 .
 ├── src/
-│   ├── main.py         # точка входа (функция main)
-│   ├── calculator.py   # движок вычислений
-│   ├── parser.py       # токенизация RPN
+│   ├── main.py         # точка входа (REPL-цикл)
+│   ├── calculator.py   # движок вычислений RPN
+│   ├── parser.py       # токенизация выражений
+│   ├── validator.py    # валидация токенов
 │   ├── errors.py       # CalcError
-│   └── constants.py    # REGEX и текст для консольного интерфейса
+│   └── constants.py    # regex-паттерны и UI-сообщения
 ├── tests/
     └── test_calculator.py # тесты
 ```
