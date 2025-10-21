@@ -2,10 +2,11 @@ from src.parser import Parser
 from src.errors import CalcError
 from src.validator import Validator
 
+
 class Calculator:
     """Calculates RPN expressions using expression parsed by Parser.parse()"""
 
-    def __init__(self, parser = Parser(), validator = Validator()) -> None:
+    def __init__(self, parser=Parser(), validator=Validator()) -> None:
         self.parser = parser
         self.validator = validator
 

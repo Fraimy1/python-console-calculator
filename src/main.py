@@ -1,6 +1,7 @@
 from src.calculator import Calculator
 from src.constants import USER_WELCOME_MESSAGE, USER_GOODBYE_MESSAGE
 
+
 def main():
     calc = Calculator()
     print(USER_WELCOME_MESSAGE)

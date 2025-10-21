@@ -47,11 +47,11 @@ calc = Calculator()
 
 
 @pytest.mark.parametrize("expr,expected", success_cases)
-def test_calculator_success(expr:str, expected:float):
+def test_calculator_success(expr: str, expected: float):
     assert calc.calculate_rpn(expr) == pytest.approx(expected)
 
 
 @pytest.mark.parametrize("expr,msg", error_cases)
-def test_calculator_error(expr:str, msg:str):
+def test_calculator_error(expr: str, msg: str):
     with pytest.raises(CalcError, match=msg):
         calc.calculate_rpn(expr)
