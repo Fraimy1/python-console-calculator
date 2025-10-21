@@ -23,7 +23,7 @@ class Parser:
                 try:
                     term = float(term)
                 except ValueError:
-                    raise CalcError(f"Couldn't convert {term} to float\n",
+                    raise CalcError(f"Couldn't convert {term} to float\n"
                                     f'Unsupported character "{term}"')
                 parsed.append(("NUM", float(term)))
 
