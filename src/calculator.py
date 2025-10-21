@@ -5,7 +5,7 @@ from src.errors import CalcError
 class Calculator:
     """Calculates RPN expressions using expression parsed by Parser.parse()"""
 
-    def __init__(self, parser = Parser) -> None:
+    def __init__(self, parser = Parser()) -> None:
         self.parser = parser
 
     def calculate_rpn(self, expr: str) -> float:
